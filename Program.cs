@@ -63,11 +63,11 @@ namespace GraphTerminal
             ConsoleManager.Content = _messagePanel;                                                                 //Kiinnitetään viestit terminaaliin
             _client.Connect();                                                                                      //Yhdistetään palveluun
             _messagePanel.Add(new TextBlock { Text = "[WAIT] Connecting to broker..." });                           //Ilmoitetaan että palveluun yhdistäminen on alkanut
-            while (!_client.Connected) { ConsoleManager.AdjustBufferSize(); }                                       //Jäädään kiertämään kunnes palveluun on muodotettu yhteys
+            while (!_client.Connected) {}                                                                           //Jäädään kiertämään kunnes palveluun on muodotettu yhteys
             _messagePanel.Add(new TextBlock { Text = "[OK] Connected!" });                                          //Ilmoitetaan yhteyden muodostuneen
             _messagePanel.Add(new TextBlock { Text = "[WAIT] Waiting for topic response..." });                     //Ilmoitetaan että palvelun aihetta odotetaan
             _messagePanel.Add(new TextBlock { Text = "[WAIT] (This may take several minutes)" });                   //Ilmoitetaan että aikaa voi kulua
-            while (!_display) { ConsoleManager.AdjustBufferSize(); }                                                //Jäädään kiertämään kunnes palvelun aihe on esitettävissä
+            while (!_display) {}                                                                                    //Jäädään kiertämään kunnes palvelun aihe on esitettävissä
             MainLoop(true);                                                                                         //Aloitetaan ohjelman pääsilmukka
         }
         //-----------------------------------------------------------
