@@ -14,7 +14,7 @@ Platforms:
 ## Dependencies
 * .net7.0
 * [ConsoleGUI](https://github.com/TomaszRewak/C-sharp-console-gui-framework) by: Tomasz Rewak.
-* [M2Mqtt](https://github.com/eclipse/paho.mqtt.m2mqtt) by: Eclipse.
+* [MQTTnet](https://github.com/dotnet/MQTTnet) by: dotnet.
 ## Usage
 Launch parameters
 >Launch parameters are defined by a token, followed by a corresponding value separated by a space.
@@ -50,6 +50,7 @@ Example syntax:
 >2. Navigate to the executable directory
 >3. Type `./GraphTerminal`, followed by our launch parameters
 >4. Launch the application
+>5. (Please note that shells like Bash don't support certain characters in launch parameters, so if your username, password, URL or topic includes any of these characters, you need to preceed them with a backslash, or type the whole parameter containing said character within single quotes).
 
 ### Running the application
 As you launch the application, information about the broker connection is displayed.<br>

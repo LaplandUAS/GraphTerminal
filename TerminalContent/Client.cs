@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Text.Json;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
+using MQTTnet;
+using MQTTnet.Client;
 
 namespace GraphTerminal.TerminalContent
 {
@@ -26,14 +26,15 @@ namespace GraphTerminal.TerminalContent
         public string TopicHandle;
         public int EntryCount;
 
-        private readonly string _clientID = Guid.NewGuid().ToString();
         private readonly string _mqttURI;
         private readonly string _mqttUser;
         private readonly string _mqttPassword;
-        private readonly string[] _mqttTopic;
-        private Packet _pkg;
+        private readonly string _mqttTopic;
+        private Packet? _pkg;
         private float[]? _data;
-        private readonly MqttClient _mqttClient;
+        private readonly MqttFactory _mqttFactory;
+        private readonly IMqttClient _mqttClient;
+        private readonly MqttClientOptionsBuilder _mqttOpitons;
         public Client(string uri, string usr, string pwd, string top)
         {
             TopicHandle = string.Empty;
@@ -42,28 +43,23 @@ namespace GraphTerminal.TerminalContent
             _mqttURI = uri;
             _mqttUser = usr;
             _mqttPassword = pwd;
-            _mqttTopic = new string[] { top };
-            _mqttClient = new MqttClient(_mqttURI);
-            _mqttClient.MqttMsgPublishReceived += ClientReceived;
+            _mqttTopic = top;
+            _mqttFactory = new MqttFactory();
+            _mqttClient = _mqttFactory.CreateMqttClient();
+            _mqttOpitons = new MqttClientOptionsBuilder().WithTcpServer(_mqttURI, 1883).WithCredentials(_mqttUser, _mqttPassword);
         }
-        public void Connect()
+        public async void Connect()
+        {
+            await _mqttClient.ConnectAsync(_mqttOpitons.Build(), CancellationToken.None);
+            await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(_mqttTopic).Build());
+            _mqttClient.ApplicationMessageReceivedAsync += (sender) => ClientReceived(sender.ApplicationMessage);
+        }
+        protected virtual Task ClientReceived(MqttApplicationMessage e)
         {
             try
             {
-                _mqttClient.Connect(_clientID, _mqttUser, _mqttPassword);
-            }
-            catch
-            {
-                ClientDisconnected(this, EventArgs.Empty);
-            }
-            _mqttClient.Subscribe(_mqttTopic, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
-        }
-        protected virtual void ClientReceived(object sender, MqttMsgPublishEventArgs e)
-        {
-            try
-            {
-                _pkg = JsonSerializer.Deserialize<Packet>(Encoding.UTF8.GetString(e.Message))!;
-                _data = new float[_pkg.Sensors.Count];
+                _pkg = JsonSerializer.Deserialize<Packet>(Encoding.UTF8.GetString(e.PayloadSegment));
+                _data = new float[_pkg!.Sensors.Count];
                 for (int d = 0; d < _data.Length; d++)
                 {
                     _data[d] = (float)Convert.ToDecimal(_pkg.Sensors[d].Value, CultureInfo.GetCultureInfo("en-US"));
@@ -76,6 +72,7 @@ namespace GraphTerminal.TerminalContent
             {
                 throw new Exception("InvalidPacket");
             }
+            return Task.CompletedTask;
         }
         protected virtual void ClientDisconnected(object sender, EventArgs e)
         {

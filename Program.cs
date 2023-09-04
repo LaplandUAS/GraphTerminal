@@ -19,7 +19,7 @@ namespace GraphTerminal
         private static Client? _client;                                                                             //MQTT yhteys
         private static VerticalStackPanel? _messagePanel;                                                           //Esitettävien käynnistysviestien puskuripaneeli
         private static bool _display = false;                                                                       //Onko palvelun aihe esitettävä
-        private static string? _url, _usr, _pwd, _top;
+        private static string? _url, _usr, _pwd, _top;                                                              //Parametrien merkkijonot
         //-----------------------------------------------------------
         //Program luokan [Main] funktio:
         //Ohjelman entrypoint.

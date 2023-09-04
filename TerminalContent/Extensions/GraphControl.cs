@@ -16,7 +16,7 @@ namespace GraphTerminal.TerminalContent.Extensions
         private const int _minBottom = 4;
         //Yksityiset
         private readonly int _minRight;                                                                             //Ikkunan minimileveys
-        private TextBlock _titleText;                                                                               //Otsikon teksti
+        private readonly TextBlock _titleText;                                                                               //Otsikon teksti
         private Offset _offset;                                                                                     //Marginaali
         private readonly Overlay _window;                                                                           //Ikkunan olio
         private LabelControl[]? _labels;                                                                            //Lämpötilamerkintöjen oliotaulukko

@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="ConsoleGUI" Version="1.4.2" />
-    <PackageReference Include="M2Mqtt" Version="4.3.0" />
+    <PackageReference Include="MQTTnet" Version="4.3.0.858" />
   </ItemGroup>
 
 </Project>

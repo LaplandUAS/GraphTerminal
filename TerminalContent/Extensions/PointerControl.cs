@@ -70,6 +70,7 @@ namespace GraphTerminal.TerminalContent.Extensions
         private string BuildContent()                                                                               //PointerControl BuildContent funktio
         {
             StringBuilder? sb = new();                                                                              //Luodaan uusi puskuri merkiijonolle
+            _index += 1;                                                                                            //Lisätään indeksiin 1 (Indeksi alkaa muuten nollasta)
             if (!AlignLeft)                                                                                         //Onko osoittimen sijainti vasemmalla
                 sb.Append($"┬\n│\n│\n└No.{_index.ToString("000")}\n {_value.ToString("000.00")}°C");                //Mikäli ei, piirretään osoittimelle pidempi varsi
             else
